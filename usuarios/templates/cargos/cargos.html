@@ -1,0 +1,92 @@
+{% extends 'Base/head.html' %}
+{% load crispy_forms_tags %}
+
+{% block Osvell %}
+
+<div class="main-content">
+    {% if messages %}
+    <div class="alert alert-success">
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <section class="section">
+        <div class="section-header">
+            <h1>Cargos</h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item"><a href="{% url 'usuarios' %}" style="text-decoration: none;">Gestion</a></div>
+                <div class="breadcrumb-item"><a href="{% url 'cargos' %}" style="text-decoration: none;">Cargos</a></div>
+            </div>
+        </div>
+
+        <div class="section-body">
+            <div class="row">
+                <!-- Columna izquierda: Formulario -->
+                <div class="col-12 col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Agregar Cargo</h4>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="nombre">Nombre del Cargo</label>
+                                    <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ingrese el nombre del cargo" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">Guardar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna derecha: Tabla -->
+                <div class="col-12 col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Lista de Cargos</h4>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Cargo</th>
+                                        <th scope="col">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if Goku %}
+                                    {% for g in Goku %}
+                                    <tr>
+                                        <th scope="row">{{ forloop.counter }}</th>
+                                        <td>{{ g.nombre }}</td>
+                                        <td>
+                                            <div>
+                                                <a href="{% url 'actCargos' g.id %}" style="text-decoration: none;">
+                                                    <button class="btn btn-outline-warning"><i class="fa fa-undo"></i></button>
+                                                </a>
+                                                <a href="{% url 'dltCargos' g.id %}" style="text-decoration: none;">
+                                                    <button class="btn btn-outline-danger btnEliminacion"><i class="fa fa-trash"></i></button>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="3">No Hay Datos Registrados</td>
+                                    </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                            {% include 'paginator.html' %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends 'base/head.html' %}
+{% load static %}
+
+{% block Osvell %}
+    <div class="main-content">
+        <section class="section">
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="card card-statistic-1">
+                <div class="card-icon bg-primary">
+                  <i class="fa fa-user-circle fa-3x" style="color: white;"></i> <!-- Ícono cambiado y pintado de blanco -->
+                </div>
+                <a href="{% url 'empleados' %}" style="text-decoration: none;">
+                <div class="card-wrap">
+                  <div class="card-header">
+                    <h4>Usuarios</h4>
+                  </div>
+                  <div class="card-body">
+                    {{power}}
+                  </div>
+                </div>
+                </a>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="card card-statistic-1">
+                <div class="card-icon bg-danger">
+                  <i class="fa fa-briefcase fa-3x" style="color: white;"></i> <!-- Ícono cambiado y pintado de blanco -->
+                </div>
+                <a href="{% url 'cargos' %}" style="text-decoration: none;">
+                <div class="card-wrap">
+                  <div class="card-header">
+                    <h4>Cargos</h4>
+                  </div>
+                  <div class="card-body">
+                    {{nobara}}
+                  </div>
+                </div>
+                </a>
+              </div>
+            </div>               
+          </div>
+          <div class="row">
+            <div class="col-lg-12 col-md-12 col-12 col-sm-12">
+              <div class="card">
+                <div class="card-header">
+                  <h4>Ultimos Registrados</h4>
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-striped mb-0">
+                      <thead>
+                        <tr>
+                          <th>Usuario</th>
+                          <th>Cargo</th>
+                          <th>Fecha Adicion</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% if Culona %}
+                        {% for c in Culona %}
+                        <tr>
+                          <td>
+                            <a href="{% url 'viewUser' c.id %}" class="font-weight-600"><img src="{{c.foto_perfil.url}}" alt="{{c.nombre}}" width="30" class="rounded-circle mr-1"> {{c.nombre}} {{c.apellido}}</a>
+                          </td>
+                          <td>
+                            {{c.cargo}}
+                          </td>
+                          <td>
+                            {{c.fecha_creacion}}
+                          </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                          <td colspan="3" style="text-align: center;">No hay registros</td>
+                        </tr>
+                        {% endif %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+    </div>
+{% endblock %}
