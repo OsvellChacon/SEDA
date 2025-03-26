@@ -1,0 +1,75 @@
+{% extends 'Base/head.html' %}
+{% load crispy_forms_tags %}
+
+{% block Osvell %}
+
+<div class="content-body">
+
+    <div class="main-content">
+        <section class="section">
+          <div class="section-header">
+            <h1>Auditoria</h1>
+            <div class="section-header-breadcrumb">
+              <div class="breadcrumb-item"><a href="{% url 'dashboard' %}" style="text-decoration: none;">Dashboard</a></div>
+              <div class="breadcrumb-item"><a href="{% url 'auditoria' %}" style="text-decoration: none;">Auditoria</a></div>
+            </div>
+          </div>
+          {% if messages %}
+          <div class="alert alert-success">
+              {% for message in messages %}
+              <p>{{ message }}</p>
+              {% endfor %}
+          </div>
+          {% endif %}
+          <div class="section-body">
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                      <th scope="col">Usuario</th>
+                                      <th scope="col">Fecha y Hora</th>
+                                      <th scope="col">Modulo</th>
+                                      <th scope="col">Objeto</th>
+                                      <th scope="col">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                  {% if logs %}
+                                  {% for log in logs %}
+                                  <tr>
+                                      <td>{{ log.actor.username }}</td>
+                                      <td>{{ log.timestamp }}</td>
+                                      <td>{{ log.content_type.app_label }}</td> <!-- Aquí se muestra el nombre de la aplicación -->
+                                      <td>{{ log.object_repr }}</td>
+                                      <td>
+                                      {% if log.action == 0 %}
+                                          <span class="badge badge-success" style="margin: 0.5rem;">Creado</span>
+                                      {% elif log.action == 1 %}
+                                          <span class="badge badge-primary" style="margin: 0.5rem;">Actualizado</span>
+                                      {% elif log.action == 2 %}
+                                          <span class="badge badge-danger" style="margin: 0.5rem;">Eliminado</span>
+                                      {% endif %}
+                                  </td>
+                                  </tr>
+                                  {% endfor %}
+                                  {% else %}
+                                  <tr>
+                                      <td colspan="5" class="text-center">No hay movimientos registrados</td>
+                                  </tr>
+                                  {% endif %}
+                              </tbody>
+                            </table>
+                            {% include 'paginator.html' %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </section>
+      </div>
+</div>
+
+{% endblock %}

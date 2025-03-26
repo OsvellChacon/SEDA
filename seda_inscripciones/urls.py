@@ -27,6 +27,7 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls'), name='dashboard'),
     path('usuarios/', include('usuarios.urls'), name='usuarios'),
     path('estudiantes/', include('estudiantes.urls'), name='estudiantes'),
+    path('auditoria/', include('auditoria.urls'), name='auditoria'),
     path('select2/', include('django_select2.urls')),
     path('cerrar_sesion/', views.cerrar_sesion, name='logout')
 ]

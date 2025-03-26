@@ -55,6 +55,7 @@ def estudiante_dashboard(request):
         'Zenin': Maki,  # Paginador de documentos
         'progreso': progreso,  # Progreso de los documentos subidos
         'paginator': paginator,
+        'documentos': documentos,  # Pasamos los documentos al contexto
     }
 
     return render(request, "dashboardEstudiantes.html", context)

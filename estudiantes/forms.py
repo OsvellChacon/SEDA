@@ -59,6 +59,7 @@ class EstudiantesRegistroForm(UserCreationForm):
         user.rol = 'Estudiante'  # Asegurar que el rol se mantenga como estudiante
         if commit:
             user.save()
+            DocumentosEstudiante.objects.create(estudiante=user)
         return user
 
 class EstudiantesActualizacionForm(forms.ModelForm):

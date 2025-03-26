@@ -1,0 +1,36 @@
+{% extends 'Base/head.html' %}
+{% load crispy_forms_tags %}
+
+{% block Osvell %}
+
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+            <h1>Actualizar Documentos</h1>
+        </div>
+
+        <div class="section-body">
+            <div class="row">
+                <!-- Columna izquierda: Formulario -->
+                <div class="col-12 col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Actualizar Documentos</h4>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" enctype="multipart/form-data" action="">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    {{ form|crispy }}
+                                </div>
+                                <center><button type="submit" class="btn btn-outline-primary btn-lg" >Actualizar Documentos</button>
+                                </center>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

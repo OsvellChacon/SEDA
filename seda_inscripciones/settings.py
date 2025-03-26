@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'usuarios',
     'estudiantes',
     'django_countries',
+    'auditoria',
     'django_select2',
     'widget_tweaks',
 ]

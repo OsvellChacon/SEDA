@@ -138,3 +138,28 @@ def subir_documentos(request):
     }
 
     return render(request, 'documentos/subir_documentos.html', context)
+
+@login_required
+def actualizar_documentos(request, id):
+    estudiante = request.user.estudiantes  # Obtener el estudiante autenticado
+    
+    # Asegurar que el estudiante solo pueda actualizar sus propios documentos
+    documentos = get_object_or_404(DocumentosEstudiante, id=id, estudiante=estudiante)
+
+    if request.method == 'POST':
+        form = DocumentosEstudianteForm(request.POST, request.FILES, instance=documentos)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Documentos actualizados exitosamente.")
+            return redirect('estudiante_dashboard')  # Redirige al dashboard tras la actualización
+        else:
+            messages.error(request, "Hubo un error al actualizar los documentos.")
+    else:
+        form = DocumentosEstudianteForm(instance=documentos)
+        
+    context = {
+        'page_title': 'SEDA | Actualizar Documentos',
+        'form': form
+    }
+
+    return render(request, 'documentos/actualizar_documentos.html', context)

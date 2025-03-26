@@ -9,22 +9,41 @@
     </div>
     <div class="row">
       <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-        <a href="{% url 'subir_documentos' %}" style="text-decoration: none;">
+        {% if documentos %}
+        <a href="{% url 'actualizar_documentos' documentos.id %}" style="text-decoration: none;">
           <div class="card card-statistic-1">
-            <div class="card-icon bg-primary">
-              <i class="far fa-user"></i>
-            </div>
-            <div class="card-wrap">
-              <div class="card-header">
-                <h4>Cargar Documentos</h4>
+              <div class="card-icon bg-warning">
+                  <i class="fas fa-edit"></i>
               </div>
-              <div class="card-body">
-                Click aqui
+              <div class="card-wrap">
+                  <div class="card-header">
+                      <h4>Actualizar Documentos</h4>
+                  </div>
+                  <div class="card-body">
+                      Haz clic aquí
+                  </div>
               </div>
-            </div>
           </div>
-        </a>
-      </div>
+      </a>
+        {% else %}
+            <a href="{% url 'subir_documentos' %}" style="text-decoration: none;">
+                <div class="card card-statistic-1">
+                    <div class="card-icon bg-primary">
+                        <i class="fas fa-upload"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="card-header">
+                            <h4>Cargar Documentos</h4>
+                        </div>
+                        <div class="card-body">
+                            Click aquí
+                        </div>
+                    </div>
+                </div>
+            </a>
+        {% endif %}
+    </div>
+    
       <div class="col-lg-4 col-md-6 col-sm-6 col-12">
         <div class="card card-statistic-1 shadow" style="border-radius: 10px; overflow: hidden; background-color: {% if progreso == 100 %}#28a745{% elif progreso >= 50 %}#ffc107{% else %}#dc3545{% endif %};">
           <div class="card-icon d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; background-color: rgba(255, 255, 255, 0.2); border-radius: 50%; margin: 15px auto;">
@@ -95,10 +114,22 @@
                   <tr>
                     <td>{{ documento.estudiante.nombre }} {{ documento.estudiante.apellido }}</td>
                     <td>{{ documento.fecha_subida }}</td>
-                    <td>Subido</td>
+                    <td>
+                      {% if documento.estado_inscripcion == "En Revisión" %}
+                          <span class="badge badge-warning">En Revisión</span>
+                      {% elif documento.estado_inscripcion == "Aprobado" %}
+                          <span class="badge badge-success">Aprobado</span>
+                      {% else %}
+                          <span class="badge badge-danger">Rechazado</span>
+                      {% endif %}
+                  </td>                  
                     <td>{{documento.codigo_inscripcion}}</td>
                     <td>
-                      <a href="{{ documento.documento_identidad.url }}" class="btn btn-primary">Descargar</a>
+                      {% if documento.documento_identidad %}
+                        <a href="{{ documento.documento_identidad.url }}" target="_blank">Ver Documento</a>
+                      {% else %}
+                          <span class="text-danger">No cargado</span>
+                      {% endif %}
                     </td>
                   </tr>
                 {% empty %}

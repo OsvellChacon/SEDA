@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 from django_countries.fields import CountryField
 from usuarios.models import CustomUser
+from auditlog.registry import auditlog
 
 # Función para validar formato y tamaño de archivo
 def validar_archivo(value):
@@ -26,6 +27,11 @@ class Estudiantes(CustomUser):
 
     def __str__(self):
         return f"{self.nombre} {self.apellido} ({self.nacionalidad})"
+    
+class EstadoInscripcion(models.TextChoices):
+    EN_REVISION = "En Revisión", "En Revisión"
+    APROBADO = "Aprobado", "Aprobado"
+    RECHAZADO = "Rechazado", "Rechazado"
 
 class DocumentosEstudiante(models.Model):
     estudiante = models.OneToOneField(Estudiantes, on_delete=models.CASCADE, related_name="documentos")
@@ -45,6 +51,12 @@ class DocumentosEstudiante(models.Model):
     extracto_bancario = models.FileField(upload_to='documentos_estudiantes/extracto_bancario/', blank=True, null=True, validators=[validar_archivo])
 
     fecha_subida = models.DateTimeField(auto_now_add=True)
+    
+    estado_inscripcion = models.CharField(
+        max_length=20, 
+        choices=EstadoInscripcion.choices, 
+        default=EstadoInscripcion.EN_REVISION
+    )
 
     def save(self, *args, **kwargs):
         if not self.codigo_inscripcion:
@@ -73,3 +85,6 @@ class DocumentosEstudiante(models.Model):
 
     def __str__(self):
         return f"Documentos de {self.estudiante.nombre} {self.estudiante.apellido}"
+
+auditlog.register(Estudiantes)
+auditlog.register(DocumentosEstudiante)
