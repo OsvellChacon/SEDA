@@ -6,7 +6,7 @@
         <section class="section">
           <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-              <a href="{% url 'empleados' %}" style="text-decoration: none;">
+              <a href="{% url 'lista_estudiantes' %}" style="text-decoration: none;">
               <div class="card card-statistic-1">
                 <div class="card-icon bg-primary">
                   <i class="fa fa-user-circle fa-3x" style="color: white;"></i> <!-- Ícono cambiado y pintado de blanco -->
@@ -16,7 +16,7 @@
                     <h4>Estudiantes</h4>
                   </div>
                   <div class="card-body">
-                    {{power}}
+                    {{estudiantes}}
                   </div>
                 </div>
               </div>
@@ -70,8 +70,7 @@
                     <table class="table table-striped mb-0">
                       <thead>
                         <tr>
-                          <th>Usuario</th>
-                          <th>Cargo</th>
+                          <th>Estudiante</th>
                           <th>Fecha Adicion</th>
                         </tr>
                       </thead>
@@ -80,10 +79,7 @@
                         {% for c in Culona %}
                         <tr>
                           <td>
-                            <a href="{% url 'viewUser' c.id %}" class="font-weight-600"><img src="{{c.foto_perfil.url}}" alt="{{c.nombre}}" width="30" class="rounded-circle mr-1"> {{c.nombre}} {{c.apellido}}</a>
-                          </td>
-                          <td>
-                            {{c.cargo}}
+                            <a href="{% url 'verEstudiante' c.id %}" class="font-weight-600"><img src="{{c.foto_perfil.url}}" alt="{{c.nombre}}" width="30" class="rounded-circle mr-1"> {{c.nombre}} {{c.apellido}}</a>
                           </td>
                           <td>
                             {{c.fecha_creacion}}

@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import Estudiantes
 
-# Register your models here.
+@admin.register(Estudiantes)
+class EstudiantesAdmin(admin.ModelAdmin):
+    list_display = ('nombre', 'apellido', 'email', 'nacionalidad')  # Mostramos la nacionalidad

@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'dashboard',
     'usuarios',
     'estudiantes',
+    'django_countries',
     'django_select2',
     'widget_tweaks',
 ]

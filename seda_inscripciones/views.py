@@ -16,10 +16,10 @@ from django.contrib import messages
 def login_view(request):
     login_error = False
     inactive_error = False
-    form = AuthenticationForm()  # Aseguramos que el formulario esté presente
+    form = AuthenticationForm()
 
     if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)  # Usamos el formulario de Django
+        form = AuthenticationForm(request, data=request.POST)
         username_or_email = request.POST.get('username_or_email') 
         password = request.POST.get('password') 
 
@@ -32,19 +32,24 @@ def login_view(request):
                 user = authenticate(username=user.username, password=password)
                 if user is not None:
                     login(request, user)
-                    return redirect('dashboard')
+
+                    # Verificar si el usuario es un Estudiante basándonos en la relación
+                    if hasattr(user, 'Estudiante'):  # Si el usuario tiene un perfil de estudiante
+                        return redirect('estudiante_dashboard')  # Redirige al dashboard del estudiante
+                    else:  # Si no es un estudiante, es un empleado
+                        return redirect('dashboard')  # Redirige al dashboard del empleado
                 else:
                     login_error = True
         else:
             login_error = True
 
     return render(request, 'registration/login.html', {
-        'form': form,  # Pasamos el formulario a la plantilla
+        'form': form,
         'login_error': login_error,
         'inactive_error': inactive_error,
         'page_title': 'SEDA | Login'
     })
-
+    
 def registrar_estudiante(request):
     if request.method == "POST":
         form = EstudiantesRegistroForm(request.POST, request.FILES)
