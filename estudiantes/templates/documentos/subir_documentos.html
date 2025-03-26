@@ -1,0 +1,74 @@
+{% extends 'Base/head.html' %}
+{% load crispy_forms_tags %}
+
+{% block Osvell %}
+
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+            <h1>Subir Documentos</h1>
+        </div>
+
+        <div class="section-body">
+            <div class="row">
+                <!-- Columna izquierda: Formulario -->
+                <div class="col-12 col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Agregar Estudiante</h4>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" enctype="multipart/form-data" action="">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    {{ form|crispy }}
+                                </div>
+                                <center><button type="submit" id="btn-enviar" class="btn btn-outline-primary btn-lg" disabled>Enviar Documentos</button>
+                                </center>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".file-input").forEach(input => {
+            input.addEventListener("change", function(event) {
+                let fileName = event.target.value.split("\\").pop();
+                let checkIcon = document.createElement("span");
+                checkIcon.classList.add("text-success", "ml-2");
+                checkIcon.innerHTML = "✔ Archivo cargado";
+    
+                let parent = event.target.parentElement;
+                if (!parent.querySelector(".text-success")) {
+                    parent.appendChild(checkIcon);
+                }
+            });
+        });
+    
+        function verificarCarga() {
+            let inputs = document.querySelectorAll(".file-input");
+            let botonEnvio = document.getElementById("btn-enviar");
+            let todosCargados = true;
+    
+            inputs.forEach(input => {
+                if (!input.value) {
+                    todosCargados = false;
+                }
+            });
+    
+            botonEnvio.disabled = !todosCargados;
+        }
+    
+        document.querySelectorAll(".file-input").forEach(input => {
+            input.addEventListener("change", verificarCarga);
+        });
+    
+        verificarCarga();
+    });
+    </script>
+{% endblock %}

@@ -33,10 +33,10 @@ def login_view(request):
                 if user is not None:
                     login(request, user)
 
-                    # Verificar si el usuario es un Estudiante basándonos en la relación
-                    if hasattr(user, 'Estudiante'):  # Si el usuario tiene un perfil de estudiante
-                        return redirect('estudiante_dashboard')  # Redirige al dashboard del estudiante
-                    else:  # Si no es un estudiante, es un empleado
+                    # Verificar si el usuario es un estudiante o un empleado
+                    if hasattr(user, 'estudiantes') and user.estudiantes.rol:  
+                        return redirect('estudiante_dashboard')
+                    else:
                         return redirect('dashboard')  # Redirige al dashboard del empleado
                 else:
                     login_error = True
@@ -49,6 +49,7 @@ def login_view(request):
         'inactive_error': inactive_error,
         'page_title': 'SEDA | Login'
     })
+
     
 def registrar_estudiante(request):
     if request.method == "POST":

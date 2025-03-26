@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from datetime import date
-from .models import Estudiantes
+from .models import *
 from django_countries.widgets import CountrySelectWidget
 
 class EstudiantesRegistroForm(UserCreationForm):
@@ -32,6 +32,12 @@ class EstudiantesRegistroForm(UserCreationForm):
             raise ValidationError("El estudiante debe tener al menos 16 años.")
         return fecha_nacimiento
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if CustomUser.objects.filter(email=email).exists():
+            raise forms.ValidationError("Este correo electrónico ya está registrado.")
+        return email
+    
     # Validación personalizada para el DNI
     def clean_dni(self):
         dni = self.cleaned_data.get('dni')
@@ -91,3 +97,25 @@ class EstudiantesActualizacionForm(forms.ModelForm):
         if commit:
             estudiante.save()
         return estudiante
+    
+class DocumentosEstudianteForm(forms.ModelForm):
+    class Meta:
+        model = DocumentosEstudiante
+        fields = [
+            'pasaporte', 'documento_identidad', 'antecedentes_penales', 'seguro_medico',
+            'carta_inscripcion', 'recibo_pago', 'diploma_traducido', 'transcripcion_traducida',
+            'carta_intencion', 'resumen_financiero', 'extracto_bancario'
+        ]
+        widgets = {
+            'pasaporte': forms.ClearableFileInput(attrs={'class': 'form-control file-input'}),
+            'documento_identidad': forms.ClearableFileInput(attrs={'class': 'form-control file-input'}),
+            'antecedentes_penales': forms.ClearableFileInput(attrs={'class': 'form-control file-input'}),
+            'seguro_medico': forms.ClearableFileInput(attrs={'class': 'form-control file-input'}),
+            'carta_inscripcion': forms.ClearableFileInput(attrs={'class': 'form-control file-input'}),
+            'recibo_pago': forms.ClearableFileInput(attrs={'class': 'form-control file-input'}),
+            'diploma_traducido': forms.ClearableFileInput(attrs={'class': 'form-control file-input'}),
+            'transcripcion_traducida': forms.ClearableFileInput(attrs={'class': 'form-control file-input'}),
+            'carta_intencion': forms.ClearableFileInput(attrs={'class': 'form-control file-input'}),
+            'resumen_financiero': forms.ClearableFileInput(attrs={'class': 'form-control file-input'}),
+            'extracto_bancario': forms.ClearableFileInput(attrs={'class': 'form-control file-input'}),
+        }

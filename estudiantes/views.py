@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from .forms import *
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -117,3 +118,23 @@ def mostrarEstudiante(request, id):
     }
 
     return render(request, "estudiantes/tarjetaEstudiante.html", context)
+
+@login_required
+def subir_documentos(request):
+    estudiante = request.user.estudiantes  # Obtener el estudiante autenticado
+    documentos, created = DocumentosEstudiante.objects.get_or_create(estudiante=estudiante)
+
+    if request.method == 'POST':
+        form = DocumentosEstudianteForm(request.POST, request.FILES, instance=documentos)
+        if form.is_valid():
+            form.save()
+            return redirect('estudiante_dashboard')  # Redirige al dashboard del estudiante tras la subida
+    else:
+        form = DocumentosEstudianteForm(instance=documentos)
+        
+    context = {
+        'page_title': 'SEDA | Subir Documentos',
+        'form': form
+    }
+
+    return render(request, 'documentos/subir_documentos.html', context)

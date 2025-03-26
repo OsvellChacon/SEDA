@@ -112,6 +112,11 @@ class CustomUser(AbstractUser):
             return (now() - self.fecha_creacion).days
         return None
 
+    def save(self, *args, **kwargs):
+        if not self.username:  # Si no se proporciona un username
+            self.username = f"{self.email.split('@')[0]}_{self.dni}"  # Generar un username único basado en el email y DNI
+        super().save(*args, **kwargs)
+
 # Modelo de Empleado
 class Empleado(CustomUser):
     cargo = models.ForeignKey(Cargo, on_delete=models.CASCADE, verbose_name=_('Cargo'), null=True, blank=True)

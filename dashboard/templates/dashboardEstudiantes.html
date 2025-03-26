@@ -1,77 +1,117 @@
 {% extends 'base/head.html' %}
 {% block Osvell %}
-  <div class="main-content">
-        <section class="section">
-          <div class="row">
-            <div class="col-md-8">
-              <div class="card">
-                <div class="card-header">
-                  <h4>Ultimos Estudiantes Registrados</h4>
-                  <div class="card-header-action">
-                    <a href="{% url 'lista_estudiantes' %}" class="btn btn-danger">Ver Mas <i class="fas fa-chevron-right"></i></a>
-                  </div>
-                </div>
-                <div class="card-body p-0">
-                  <div class="table-responsive table-invoice">
-                    <table class="table table-striped mb-0">
-                      <thead>
-                        <tr>
-                          <th>Estudiante</th>
-                          <th>Fecha Adicion</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {% if Zenin %}
-                        {% for c in Zenin %}
-                        <tr>
-                          <td>
-                            <a href="{% url 'verEstudiante' c.id %}" class="font-weight-600"><img src="{{c.foto_perfil.url}}" alt="{{c.nombre}}" width="30" class="rounded-circle mr-1"> {{c.nombre}} {{c.apellido}}</a>
-                          </td>
-                          <td>
-                            {{c.fecha_creacion}}
-                          </td>
-                        </tr>
-                        {% endfor %}
-                        {% else %}
-                        <tr>
-                          <td colspan="3" style="text-align: center;">No hay registros</td>
-                        </tr>
-                        {% endif %}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
+<div class="main-content">
+  <section class="section">
+    <div class="section-header">
+      {% if user.is_authenticated %}
+        <h1>Saludos: {{user.nombre}} {{user.apellido}}</h1>
+      {% endif %}
+    </div>
+    <div class="row">
+      <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+        <a href="{% url 'subir_documentos' %}" style="text-decoration: none;">
+          <div class="card card-statistic-1">
+            <div class="card-icon bg-primary">
+              <i class="far fa-user"></i>
             </div>
-            <div class="col-md-4">
-              <div class="card card-hero">
-                <div class="card-header">
-                  <div class="card-icon">
-                    <i class="far fa-question-circle"></i>
-                  </div>
-                  <h4>14</h4>
-                  <div class="card-description">Procesos por aprobar</div>
-                </div>
-                <div class="card-body p-0">
-                  <div class="tickets-list">
-                    <a href="#" class="ticket-item">
-                      <div class="ticket-title">
-                        <h4>My order hasn't arrived yet</h4>
-                      </div>
-                      <div class="ticket-info">
-                        <div>Laila Tazkiah</div>
-                        <div class="bullet"></div>
-                        <div class="text-primary">1 min ago</div>
-                      </div>
-                    </a>
-                    <a href="features-tickets.html" class="ticket-item ticket-more">
-                      Ver todos <i class="fas fa-chevron-right"></i>
-                    </a>
-                  </div>
-                </div>
+            <div class="card-wrap">
+              <div class="card-header">
+                <h4>Cargar Documentos</h4>
+              </div>
+              <div class="card-body">
+                Click aqui
               </div>
             </div>
           </div>
-        </section>
+        </a>
+      </div>
+      <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+        <div class="card card-statistic-1 shadow" style="border-radius: 10px; overflow: hidden; background-color: {% if progreso == 100 %}#28a745{% elif progreso >= 50 %}#ffc107{% else %}#dc3545{% endif %};">
+          <div class="card-icon d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; background-color: rgba(255, 255, 255, 0.2); border-radius: 50%; margin: 15px auto;">
+            <i class="fas fa-tasks text-white" style="font-size: 30px;"></i>
+          </div>
+          <div class="card-wrap text-center">
+            <div class="card-header">
+              <h4 class="text-white" style="font-weight: bold;">Progreso de Inscripción</h4>
+            </div>
+            <div class="card-body">
+              <span class="text-white" style="font-size: 24px; font-weight: bold;">{{ progreso }}%</span>
+              <p class="text-white" style="margin: 0; font-size: 14px;">Completado</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+        {% if user.status == True %}
+          <div class="card card-statistic-1">
+          <div class="card-icon bg-success">
+            <i class="fas fa-circle"></i>
+          </div>
+          <div class="card-wrap">
+            <div class="card-header">
+              <h4>Estado de cuenta</h4>
+            </div>
+            <div class="card-body">
+              Activo
+            </div>
+          </div>
+          </div>
+        {% else %}
+          <div class="card card-statistic-1">
+          <div class="card-icon bg-danger">
+            <i class="fas fa-circle"></i>
+          </div>
+          <div class="card-wrap">
+            <div class="card-header">
+              <h4>Estado de cuenta</h4>
+            </div>
+            <div class="card-body">
+              Inactivo
+            </div>
+          </div>
+          </div>
+        {% endif %}
+      </div>                  
+    </div>
+  </section>
+  <div class="row">
+    <div class="col-12 col-md-12 col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <h4>Documentos</h4>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <tbody>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Fecha</th>
+                  <th>Estado</th>
+                  <th>Codigo de Referencia</th>
+                  <th>Acciones</th>
+                </tr>
+                {% for documento in Zenin %}
+                  <tr>
+                    <td>{{ documento.estudiante.nombre }} {{ documento.estudiante.apellido }}</td>
+                    <td>{{ documento.fecha_subida }}</td>
+                    <td>Subido</td>
+                    <td>{{documento.codigo_inscripcion}}</td>
+                    <td>
+                      <a href="{{ documento.documento_identidad.url }}" class="btn btn-primary">Descargar</a>
+                    </td>
+                  </tr>
+                {% empty %}
+                  <tr>
+                    <td colspan="4">No hay documentos subidos.</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+</div>
 {% endblock %}
