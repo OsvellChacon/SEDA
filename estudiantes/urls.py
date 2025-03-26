@@ -10,4 +10,5 @@ urlpatterns = [
     path('verEstudiante/<id>/', views.mostrarEstudiante, name='verEstudiante'),
     path('subir_documentos/', views.subir_documentos, name='subir_documentos'),
     path('actualizar_documentos/<id>/', views.actualizar_documentos, name='actualizar_documentos'),
+    path('documentos_pendientes/', views.documentos_pendientes, name='documentos_pendientes')
 ]

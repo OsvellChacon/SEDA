@@ -11,6 +11,7 @@ def estudiantes(request):
     
     Shinobu = Estudiantes.objects.all().order_by('-id')
     Mitsuri = Estudiantes.objects.count()
+    Mai = DocumentosEstudiante.objects.count()
     
     page = request.GET.get('page', 1)
 
@@ -26,6 +27,7 @@ def estudiantes(request):
         'page_title': 'SEDA | Estudiantes',
         'Culona': Shinobu,
         'estudiantes': Mitsuri,
+        'pendientes': Mai,
         'paginator': paginator
     }
     
@@ -42,7 +44,7 @@ def listaEstudiantes(request):
         ).order_by('dni')
     else:
         # Si no se pasa un término de búsqueda, se muestran todos
-        Gojo = Estudiantes.objects.filter(is_superuser=False).order_by('dni')
+        Gojo = Estudiantes.objects.filter(is_superuser=False).order_by('-id')
         
     page = request.GET.get('page', 1)
 
@@ -138,7 +140,6 @@ def subir_documentos(request):
     }
 
     return render(request, 'documentos/subir_documentos.html', context)
-
 @login_required
 def actualizar_documentos(request, id):
     estudiante = request.user.estudiantes  # Obtener el estudiante autenticado
@@ -163,3 +164,14 @@ def actualizar_documentos(request, id):
     }
 
     return render(request, 'documentos/actualizar_documentos.html', context)
+
+def documentos_pendientes(request):
+    
+    Maki = DocumentosEstudiante.objects.all().order_by('-id')
+    
+    context = {
+        'page_title': 'SEDA | Documentos Pendientes',
+        'Zenin': Maki
+    }
+    
+    return render(request, "pendientes/documentos_pendientes.html", context)
