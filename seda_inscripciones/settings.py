@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'seda_inscripciones',
     'dashboard',
     'usuarios',
+    'estudiantes',
     'django_select2',
     'widget_tweaks',
 ]

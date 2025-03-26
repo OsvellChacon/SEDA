@@ -2,7 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from collections import OrderedDict
 from datetime import date, datetime
-from .models import CustomUser, Cargo
+from .models import CustomUser, Cargo, Empleado
 
 # Formulario para cargos
 class CargosFrm(forms.ModelForm):
@@ -14,7 +14,7 @@ class CargosFrm(forms.ModelForm):
 # Formulario para crear empleados
 class EmpleadosFrm(forms.ModelForm):
     class Meta:
-        model = CustomUser
+        model = Empleado
         exclude = [
             'last_login',
             'is_superuser',
@@ -112,7 +112,7 @@ class EmpleadosFrm(forms.ModelForm):
 
 class actEmpleadosFrm(forms.ModelForm):
     class Meta:
-        model = CustomUser
+        model = Empleado
         exclude = [
             'last_login',
             'is_superuser',

@@ -20,6 +20,9 @@ class GeneroChoices(models.TextChoices):
     MASCULINO = 'M', _('Masculino')
     FEMENINO = 'F', _('Femenino')
 
+# Validaciones
+# ... (Mantenemos las mismas funciones de validación)
+
 def validar_nombre(value):
     regex = r"^[a-zA-ZñÑáéíóúÁÉÍÓÚ ]+$"
     pattern = re.compile(regex)
@@ -52,7 +55,7 @@ def validar_telefono(value):
             "El teléfono debe comenzar con un prefijo internacional, como '+58', seguido de 9 o más dígitos."
         )
 
-# Modelo personalizado para los usuarios
+# Modelo base abstracto
 class CustomUser(AbstractUser):
     nombre = models.CharField(max_length=50, validators=[validar_nombre], blank=True)
     apellido = models.CharField(max_length=50, validators=[validar_nombre], blank=True)
@@ -66,29 +69,22 @@ class CustomUser(AbstractUser):
         blank=True
     )
     direccion = models.TextField(blank=True, null=True, verbose_name=_('Dirección'))
-    cargo = models.ForeignKey(Cargo, on_delete=models.CASCADE, verbose_name=_('Cargo'), null=True, blank=True)
     fecha_nacimiento = models.DateField(
         verbose_name=_('Fecha de nacimiento'),
         validators=[validar_fecha_nacimiento],
         null=True,
         blank=True
     )
-    status = models.BooleanField(default=True, verbose_name=_('Estado de Cuenta'))
     foto_perfil = models.ImageField(
-        upload_to='empleados/',
+        upload_to='usuarios/',
         default='perfil/default.jpg',
         validators=[validar_foto_perfil],
         blank=True
     )
+
+    status = models.BooleanField(default=True, verbose_name=_('Estado de Cuenta'))
+
     fecha_creacion = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.nombre} {self.apellido} - ({self.dni})"
-
-    def clean(self):
-        super().clean()
-        if CustomUser.objects.filter(dni=self.dni).exclude(id=self.id).exists():
-            raise ValidationError(_("El DNI ya está registrado."))
 
     @property
     def edad(self):
@@ -116,18 +112,11 @@ class CustomUser(AbstractUser):
             return (now() - self.fecha_creacion).days
         return None
 
-    def has_perm(self, perm, obj=None):
-        """
-        Retorna True para cualquier permiso si el usuario tiene acceso al sistema.
-        Esto asegura que el acceso no se bloquee por cambios en datos del usuario.
-        """
-        return self.status
+# Modelo de Empleado
+class Empleado(CustomUser):
+    cargo = models.ForeignKey(Cargo, on_delete=models.CASCADE, verbose_name=_('Cargo'), null=True, blank=True)
 
-    def has_module_perms(self, app_label):
-        """
-        Retorna True si el usuario tiene acceso a cualquier módulo de la aplicación.
-        """
-        return self.status
-
-# Registrar el modelo para Auditlog
-auditlog.register(CustomUser)
+    def __str__(self):
+        return f"Empleado: {self.nombre} {self.apellido} ({self.dni})"
+    
+auditlog.register(Empleado)

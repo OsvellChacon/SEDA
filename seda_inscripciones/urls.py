@@ -23,8 +23,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls'), name='Home'),
     path('', views.login_view, name='login'),
+    path('registro/', views.registrar_estudiante, name='registrar_estudiante'),
     path('dashboard/', include('dashboard.urls'), name='dashboard'),
     path('usuarios/', include('usuarios.urls'), name='usuarios'),
+    path('estudiantes/', include('estudiantes.urls'), name='estudiantes'),
     path('select2/', include('django_select2.urls')),
     path('cerrar_sesion/', views.cerrar_sesion, name='logout')
 ]

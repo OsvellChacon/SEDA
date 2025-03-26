@@ -13,8 +13,8 @@ from django.db.models import Q
 @permission_required('usuarios.view_customuser')
 def usuarios(request):
     
-    Makima = CustomUser.objects.all().order_by('-id')
-    Power = CustomUser.objects.count()
+    Makima = Empleado.objects.all().order_by('-id')
+    Power = Empleado.objects.count()
     Nobara = Cargo.objects.count()
     
     page = request.GET.get('page', 1)
@@ -45,14 +45,14 @@ def mostrarUsuarios(request):
 
     # Filtrar los usuarios si se proporciona una búsqueda
     if query:
-        Denji = CustomUser.objects.filter(
+        Denji = Empleado.objects.filter(
             is_superuser=False
         ).filter(
             Q(nombre__icontains=query) | Q(apellido__icontains=query) | Q(dni__icontains=query)
         ).order_by('dni')
     else:
         # Si no se pasa un término de búsqueda, se muestran todos
-        Denji = CustomUser.objects.filter(is_superuser=False).order_by('dni')
+        Denji = Empleado.objects.filter(is_superuser=False).order_by('dni')
 
     # Paginación
     page = request.GET.get('page', 1)
@@ -95,7 +95,7 @@ def addUsuarios(request):
 @login_required
 @permission_required('usuarios.change_customuser')
 def actUsuarios(request, id):
-    Konan = get_object_or_404(CustomUser, id=id)
+    Konan = get_object_or_404(Empleado, id=id)
     
     if Konan == request.user:
         messages.error(request, 'Para actualizar tu propio usuario puedes hacerlo desde "Configuraciones"')
@@ -127,7 +127,7 @@ def actUsuarios(request, id):
 @login_required
 @permission_required('app.delete_customuser')
 def dltUsuarios(request, id):
-    Maki = get_object_or_404(CustomUser, id=id)
+    Maki = get_object_or_404(Empleado, id=id)
     
     if Maki == request.user:
         messages.error(request, "¿Eres tonto?, No puedes eliminar tu propio usuario.")
@@ -144,14 +144,14 @@ def dltUsuarios(request, id):
 @login_required
 @permission_required('auth.view_permission')
 def view_user_permissions(request, user_id):
-    user = CustomUser.objects.get(pk=user_id)
+    user = Empleado.objects.get(pk=user_id)
     permissions = user.user_permissions.all()  # Obtener los permisos del usuario
     return render(request, 'user_permissions_view.html', {'user': user, 'permissions': permissions})
 
 @login_required
 @permission_required('auth.add_permission')
 def asignar_permiso(request, user_id, permission_id):
-    user = get_object_or_404(CustomUser, pk=user_id)
+    user = get_object_or_404(Empleado, pk=user_id)
     permission = get_object_or_404(Permission, pk=permission_id)
 
     if request.method == 'POST':
@@ -166,7 +166,7 @@ def asignar_permiso(request, user_id, permission_id):
 @login_required
 @permission_required('auth.delete_permission')
 def quitar_permiso(request, user_id, permission_id):
-    user = get_object_or_404(CustomUser, pk=user_id)
+    user = get_object_or_404(Empleado, pk=user_id)
     permission = get_object_or_404(Permission, pk=permission_id)
     
     try:
@@ -174,15 +174,15 @@ def quitar_permiso(request, user_id, permission_id):
         messages.success(request, "Permiso quitado correctamente.")
     except Permission.DoesNotExist:
         messages.error(request, "El permiso seleccionado no existe.")
-    except CustomUser.DoesNotExist:
+    except Empleado.DoesNotExist:
         messages.error(request, "El usuario seleccionado no existe.")
 
     return redirect('viewUser', id=user_id)
 
 @login_required
-@permission_required('usuarios.view_customuser')
+@permission_required('usuarios.view_Empleado')
 def tarjetaUsuarios(request, id):
-    user = get_object_or_404(CustomUser, pk=id)
+    user = get_object_or_404(Empleado, pk=id)
 
     if user.id == 1 and request.user.id != 1:
         messages.error(request, "No tienes permitido ver la información del administrador.")
