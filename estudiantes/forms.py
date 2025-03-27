@@ -8,12 +8,13 @@ from django_countries.widgets import CountrySelectWidget
 class EstudiantesRegistroForm(UserCreationForm):
     class Meta:
         model = Estudiantes
-        fields = ['nombre', 'apellido', 'email', 'dni', 'telefono', 'direccion', 'fecha_nacimiento', 'foto_perfil', 'nacionalidad']
+        fields = ['nombre', 'apellido', 'email', 'dni', 'genero' ,'telefono', 'direccion', 'fecha_nacimiento', 'foto_perfil', 'nacionalidad']
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),
             'apellido': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'dni': forms.TextInput(attrs={'class': 'form-control'}),
+            'genero': forms.Select(attrs={'class': 'form-control'}),
             'telefono': forms.TextInput(attrs={'class': 'form-control'}),
             'direccion': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'fecha_nacimiento': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
@@ -64,12 +65,13 @@ class EstudiantesRegistroForm(UserCreationForm):
 class EstudiantesActualizacionForm(forms.ModelForm):
     class Meta:
         model = Estudiantes
-        fields = ['nombre', 'apellido', 'email', 'dni', 'telefono', 'direccion', 'status', 'foto_perfil', 'nacionalidad']
+        fields = ['nombre', 'apellido', 'email', 'dni', 'genero' ,'telefono', 'direccion', 'status', 'foto_perfil', 'nacionalidad']
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),
             'apellido': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'dni': forms.TextInput(attrs={'class': 'form-control'}),
+            'genero': forms.Select(attrs={'class': 'form-control'}),
             'telefono': forms.TextInput(attrs={'class': 'form-control'}),
             'direccion': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'status': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
