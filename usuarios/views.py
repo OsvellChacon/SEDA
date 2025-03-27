@@ -7,6 +7,7 @@ from auditlog.models import LogEntry
 from django.contrib.auth.models import Permission
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db.models import Q
+from django.http import Http404
 
 # Create your views here.
 @login_required
@@ -307,3 +308,30 @@ def dltCargos(request, id):
     Jogo.delete()
     messages.success(request, "Cargo Eliminado Con Exito")
     return redirect('cargos')
+
+@login_required
+def actualizar_perfil_empleado(request):
+    try:
+        # Verificar si el usuario autenticado es una instancia de Empleado
+        empleado = Empleado.objects.get(id=request.user.id)
+    except Empleado.DoesNotExist:
+        raise Http404("No se encontró un perfil de empleado asociado con este usuario.")
+
+    if request.method == 'POST':
+        form = actEmpleadosFrm(request.POST, request.FILES, instance=empleado)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Perfil actualizado exitosamente.")
+            return redirect('dashboard')  # Redirigir al dashboard
+        else:
+            messages.error(request, "Hubo un error al actualizar el perfil.")
+    else:
+        form = actEmpleadosFrm(instance=empleado)
+
+    context = {
+        'page_title': f'SEDA | Actualizar Perfil',
+        'form': form,
+        'user': empleado
+    }
+
+    return render(request, 'empleados/actualizarPerfil.html', context)

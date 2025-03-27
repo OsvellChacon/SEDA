@@ -13,6 +13,7 @@ urlpatterns = [
     path('user/quitar_permiso/<int:user_id>/', views.quitar_permiso, name='quitar_permiso'),
     path('user/<int:user_id>/permissions/', views.view_user_permissions, name='view_user_permissions'),
     path('cuentaBloqueada/', views.cuenta_bloqueada, name='cuenta_bloqueada'),
+    path('actualizar_perfil/', views.actualizar_perfil_empleado, name='actualizar_perfil_empleado'),
     
     #Cargos
     path('cargos/', views.Cargos, name='cargos'),

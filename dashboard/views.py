@@ -21,7 +21,7 @@ def dashboard(request):
     documentos_pendientes_lista = DocumentosEstudiante.objects.filter(estado_inscripcion="En Revisión").order_by('-fecha_subida')[:5]  # Mostrar los 5 más recientes
     
     # Paginación de estudiantes
-    Maki = Estudiantes.objects.all().order_by('id')  # Ordenar por el campo 'id'
+    Maki = Estudiantes.objects.all().order_by('-id')  # Ordenar por el campo 'id'
     page = request.GET.get('page', 1)
     paginator = Paginator(Maki, 5)
 

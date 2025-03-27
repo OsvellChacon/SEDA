@@ -1,0 +1,95 @@
+{% extends 'Base/head2.html' %}
+{% load crispy_forms_tags %}
+
+{% block Osvell %}
+
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+            <h1>Perfil del Estudiante</h1>
+        </div>
+
+        <div class="row mt-sm-4">
+            <!-- Tarjeta de información del estudiante -->
+            <div class="col-12 col-md-6">
+                <div class="card profile-widget">
+                    <div class="profile-widget-header text-center">
+                        <img alt="{{ user.nombre }} {{ user.apellido }}" src="{{ user.foto_perfil.url }}" class="rounded-circle profile-widget-picture">
+                        <h4 class="mt-3">{{ user.nombre }} {{ user.apellido }}</h4>
+                        <p class="text-muted">{{ user.email }}</p>
+                    </div>
+                    <div class="profile-widget-description">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <tbody>
+                                    <tr>
+                                        <th><i class="fas fa-id-card"></i> DNI:</th>
+                                        <td>{{ user.dni }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th><i class="fas fa-phone"></i> Teléfono:</th>
+                                        <td>{{ user.telefono }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th><i class="fas fa-venus-mars"></i> Género:</th>
+                                        <td>
+                                            {% if user.genero == 'M' %}
+                                                <span class="badge badge-success px-2">Masculino</span>
+                                            {% else %}
+                                                <span class="badge badge-danger px-2">Femenino</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><i class="fas fa-calendar-plus"></i> Fecha de Adición:</th>
+                                        <td>{{ user.fecha_creacion|date:"D, d M Y H:i" }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th><i class="fas fa-map-marker-alt"></i> Dirección:</th>
+                                        <td>{{ user.direccion }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th><i class="fas fa-birthday-cake"></i> Fecha de Nacimiento:</th>
+                                        <td>{{ user.fecha_nacimiento }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th><i class="fas fa-user-tag"></i> Rol:</th>
+                                        <td>{{ user.cargo }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th><i class="fas fa-check-circle"></i> Estado de cuenta:</th>
+                                        <td>
+                                            {% if user.status %}
+                                                <span class="badge badge-success px-2">Activo</span>
+                                            {% else %}
+                                                <span class="badge badge-danger px-2">Inactivo</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulario para actualizar información -->
+            <div class="col-12 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Actualizar Información</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ form|crispy }}
+                            <button type="submit" class="btn btn-primary btn-block">Guardar Cambios</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% endblock %}
