@@ -15,5 +15,7 @@ urlpatterns = [
     path('documentos_rechazados/', views.documentos_rechazados, name='documentos_rechazados'),
     path('visualizar_documento/<id>/', views.visualizarDocumentos, name='visualizarDocumento'),
     path('cambiar-estado-inscripcion/<id>/', views.cambiar_estado_inscripcion, name='cambiar_estado_inscripcion'),
+    path('actualizar_perfil/', views.actualizar_perfil_estudiante, name='actualizar_perfil_estudiante'),
+
 
 ]

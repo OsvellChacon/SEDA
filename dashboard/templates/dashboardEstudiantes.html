@@ -1,4 +1,4 @@
-{% extends 'base/head.html' %}
+{% extends 'base/head2.html' %}
 {% block Osvell %}
 <div class="main-content">
   <section class="section">
@@ -115,7 +115,6 @@
                   <th>Fecha</th>
                   <th>Estado</th>
                   <th>Codigo de Referencia</th>
-                  <th>Acciones</th>
                 </tr>
                 {% for documento in Zenin %}
                   <tr>
@@ -131,13 +130,6 @@
                       {% endif %}
                   </td>                  
                     <td>{{documento.codigo_inscripcion}}</td>
-                    <td>
-                      {% if documento.documento_identidad %}
-                        <a href="{{ documento.documento_identidad.url }}" target="_blank">Ver Documento</a>
-                      {% else %}
-                          <span class="text-danger">No cargado</span>
-                      {% endif %}
-                    </td>
                   </tr>
                 {% empty %}
                   <tr>

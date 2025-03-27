@@ -48,7 +48,7 @@
               <div class="card-header"><h4>Registrar Estudiante</h4></div>
 
               <div class="card-body">
-                <form method="POST" action="#" class="needs-validation" novalidate="">
+                <form method="POST" action="#" enctype="multipart/form-data" class="needs-validation" novalidate="">
                   {% csrf_token %}
                   <div class="form-group">
                     {{ form | crispy }}

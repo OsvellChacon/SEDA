@@ -64,7 +64,7 @@ class EstudiantesRegistroForm(UserCreationForm):
 class EstudiantesActualizacionForm(forms.ModelForm):
     class Meta:
         model = Estudiantes
-        fields = ['nombre', 'apellido', 'email', 'dni', 'telefono', 'direccion', 'status' ,'foto_perfil', 'nacionalidad']
+        fields = ['nombre', 'apellido', 'email', 'dni', 'telefono', 'direccion', 'status', 'foto_perfil', 'nacionalidad']
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),
             'apellido': forms.TextInput(attrs={'class': 'form-control'}),
@@ -74,8 +74,14 @@ class EstudiantesActualizacionForm(forms.ModelForm):
             'direccion': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'status': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'foto_perfil': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'nacionalidad': CountrySelectWidget(attrs={'class': 'form-control'})
+            'nacionalidad': CountrySelectWidget(attrs={'class': 'form-control'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Asegurarse de que el valor actual de nacionalidad se mantenga
+        if self.instance and self.instance.nacionalidad:
+            self.fields['nacionalidad'].initial = self.instance.nacionalidad
 
     # Validación personalizada para el DNI
     def clean_dni(self):

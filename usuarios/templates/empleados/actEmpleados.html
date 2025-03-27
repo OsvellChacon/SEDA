@@ -22,7 +22,7 @@
                             <h4>Actualizar: ({{Konan.nombre}} {{Konan.apellido}})</h4>
                         </div>
                         <div class="card-body">
-                            <form method="POST" action="">
+                            <form method="POST" action="" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <div class="form-group">
                                     {{Mikasa | crispy}}

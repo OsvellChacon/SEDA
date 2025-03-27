@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django_countries.fields import countries
+from django.http import HttpResponseForbidden
 
 # Create your views here.
 def estudiantes(request):
@@ -260,3 +261,27 @@ def cambiar_estado_inscripcion(request, id):
             messages.error(request, "Estado de inscripción no válido.")
     
     return redirect('estudiantes')
+
+@login_required
+def actualizar_perfil_estudiante(request):
+    # Obtener el usuario autenticado como instancia de Estudiantes
+    estudiante = get_object_or_404(Estudiantes, id=request.user.id)
+
+    if request.method == 'POST':
+        form = EstudiantesActualizacionForm(request.POST, request.FILES, instance=estudiante)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Perfil actualizado exitosamente.")
+            return redirect('estudiante_dashboard')  # Redirigir al dashboard o a otra página
+        else:
+            messages.error(request, "Hubo un error al actualizar el perfil.")
+    else:
+        form = EstudiantesActualizacionForm(instance=estudiante)
+
+    context = {
+        'page_title': f'SEDA | Actualizar Perfil',
+        'form': form,
+        'user': estudiante
+    }
+
+    return render(request, 'estudiantes/actualizarPerfil.html', context)
