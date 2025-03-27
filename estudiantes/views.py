@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django_countries.fields import countries
 
 # Create your views here.
 def estudiantes(request):
@@ -40,33 +41,36 @@ def estudiantes(request):
     return render(request, "estudiantes.html", context)
 
 def listaEstudiantes(request):
-    
     query = request.GET.get('q', '').strip()
 
-    # Filtrar los usuarios si se proporciona una búsqueda
     if query:
         Gojo = Estudiantes.objects.filter(
-            Q(nombre__icontains=query) | Q(apellido__icontains=query) | Q(dni__icontains=query) | Q(nacionalidad__icontains=query)
+            Q(nombre__icontains=query) | 
+            Q(apellido__icontains=query) | 
+            Q(dni__icontains=query) | 
+            Q(nacionalidad__icontains=query)  # Aquí sigue filtrando por código de país
         ).order_by('dni')
     else:
-        # Si no se pasa un término de búsqueda, se muestran todos
         Gojo = Estudiantes.objects.filter(is_superuser=False).order_by('-id')
-        
-    page = request.GET.get('page', 1)
 
+    # Convertir el código de país en nombre de país legible
+    for estudiante in Gojo:
+        estudiante.nacionalidad_nombre = countries.name(estudiante.nacionalidad)
+
+    page = request.GET.get('page', 1)
     paginator = Paginator(Gojo, 5)
 
     try:
         Gojo = paginator.page(page)
     except (EmptyPage, PageNotAnInteger):
         Gojo = paginator.page(paginator.num_pages)
-    
+
     context = {
         'page_title': 'SEDA | Lista Estudiantes',
         'Gojo': Gojo,
         'paginator': paginator
     }
-    
+
     return render(request, "estudiantes/estudiantes.html", context)
 
 def agregarEstudiante(request): 
@@ -172,15 +176,22 @@ def actualizar_documentos(request, id):
     return render(request, 'documentos/actualizar_documentos.html', context)
 
 def documentos_pendientes(request):
-    
-    Maki = DocumentosEstudiante.objects.filter(estado_inscripcion="En Revisión").order_by('-id')
+    query = request.GET.get('q', '').strip()
 
-    
+    if query:
+        Maki = DocumentosEstudiante.objects.filter(
+            Q(estudiante__nombre__icontains=query) |
+            Q(estudiante__apellido__icontains=query) |
+            Q(codigo_inscripcion__icontains=query)
+        ).filter(estado_inscripcion="En Revisión").order_by('-id')
+    else:
+        Maki = DocumentosEstudiante.objects.filter(estado_inscripcion="En Revisión").order_by('-id')
+
     context = {
         'page_title': 'SEDA | Documentos Pendientes',
         'Zenin': Maki
     }
-    
+
     return render(request, "pendientes/documentos_pendientes.html", context)
 
 def visualizarDocumentos(request, id):
@@ -195,7 +206,17 @@ def visualizarDocumentos(request, id):
     return render(request, "pendientes/visualizarEstudiante.html", context)
 
 def documentos_aprobados(request):
-    Maki = DocumentosEstudiante.objects.filter(estado_inscripcion="Aprobado").order_by('-id')
+    
+    query = request.GET.get('q', '').strip()
+
+    if query:
+        Maki = DocumentosEstudiante.objects.filter(
+            Q(estudiante__nombre__icontains=query) |
+            Q(estudiante__apellido__icontains=query) |
+            Q(codigo_inscripcion__icontains=query)
+        ).filter(estado_inscripcion="Aprobado").order_by('-id')
+    else:
+        Maki = DocumentosEstudiante.objects.filter(estado_inscripcion="Aprobado").order_by('-id')
     
     context = {
         'page_title': 'SEDA | Procesos Aprobados',
@@ -205,7 +226,18 @@ def documentos_aprobados(request):
     return render(request, "pendientes/procesos_aprobados.html", context)
 
 def documentos_rechazados(request):
-    Maki = DocumentosEstudiante.objects.filter(estado_inscripcion="Rechazado").order_by('-id')
+    
+    query = request.GET.get('q', '').strip()
+
+    if query:
+        Maki = DocumentosEstudiante.objects.filter(
+            Q(estudiante__nombre__icontains=query) |
+            Q(estudiante__apellido__icontains=query) |
+            Q(codigo_inscripcion__icontains=query)
+        ).filter(estado_inscripcion="Rechazado").order_by('-id')
+    else:
+        Maki = DocumentosEstudiante.objects.filter(estado_inscripcion="Rechazado").order_by('-id')
+    
     
     context = {
         'page_title': 'SEDA | Procesos Aprobados',

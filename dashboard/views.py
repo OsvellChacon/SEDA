@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from usuarios.models import Empleado
 from estudiantes.models import Estudiantes, DocumentosEstudiante
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from estudiantes.models import DocumentosEstudiante
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 # Create your views here.
 def dashboard(request):
@@ -43,6 +44,54 @@ def dashboard(request):
     }
     
     return render(request, "dashboard.html", context)
+
+@login_required
+def buscar(request):
+    query = request.GET.get('q', '').strip()
+    if not query:
+        messages.error(request, 'Por favor, introduce un criterio de búsqueda.')
+        return redirect('dashboard')
+
+    # Buscar en Empleados
+    try:
+        user = Empleado.objects.get(username=query)
+        return redirect('viewUser', id=user.id)  # Cambiar 'user_id' por 'id'
+    except Empleado.DoesNotExist:
+        pass
+
+    try:
+        user = Empleado.objects.get(nombre__icontains=query)
+        return redirect('viewUser', id=user.id)  # Cambiar 'user_id' por 'id'
+    except Empleado.DoesNotExist:
+        pass
+
+    try:
+        user = Empleado.objects.get(dni=query)
+        return redirect('viewUser', id=user.id)  # Cambiar 'user_id' por 'id'
+    except Empleado.DoesNotExist:
+        pass
+
+    # Buscar en Estudiantes
+    try:
+        estudiante = Estudiantes.objects.get(nombre__icontains=query)
+        return redirect('verEstudiante', id=estudiante.id)
+    except Estudiantes.DoesNotExist:
+        pass
+
+    try:
+        estudiante = Estudiantes.objects.get(dni__icontains=query)
+        return redirect('verEstudiante', id=estudiante.id)
+    except Estudiantes.DoesNotExist:
+        pass
+
+    # Buscar en Documentos
+    documento = DocumentosEstudiante.objects.filter(codigo_inscripcion__icontains=query)
+    if documento.exists():
+        return redirect('visualizarDocumento', id=documento.first().id)
+
+    return redirect('E404')
+
+def error404(request): return render(request, "error-404.html")
 
 @login_required
 def estudiante_dashboard(request):

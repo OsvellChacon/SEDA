@@ -27,10 +27,15 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h4>Usuarios</h4>
-                            <a href="{% url 'addUsers' %}"><button class="btn btn-outline-primary"><i class="fa fa-user-plus"></i> Agregar Usuario</button></a>
+                            <div class="d-flex">
+                                <form action="" method="get">
+                                    <input type="text" id="searchInput" class="form-control mr-2" name="q" placeholder="Buscar usuario...">
+                                </form>
+                                <a href="{% url 'addUsers' %}"><button class="btn btn-outline-primary"><i class="fa fa-user-plus"></i> Agregar Usuario</button></a>
+                            </div>
                         </div>
                         <div class="card-body">
-                            <table class="table table-hover">
+                            <table class="table table-hover" id="userTable">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -85,5 +90,21 @@
         </section>
       </div>
 </div>
+
+<script>
+    document.getElementById("searchInput").addEventListener("keyup", function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll("#userTable tbody tr");
+        
+        rows.forEach(row => {
+            let username = row.cells[1].textContent.toLowerCase();
+            if (username.includes(filter)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    });
+</script>
 
 {% endblock %}
