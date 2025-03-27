@@ -8,29 +8,35 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 def estudiantes(request):
-    
+    # Obtener todos los estudiantes y contar el total
     Shinobu = Estudiantes.objects.all().order_by('-id')
     Mitsuri = Estudiantes.objects.count()
-    Mai = DocumentosEstudiante.objects.count()
-    
-    page = request.GET.get('page', 1)
 
+    # Contar documentos pendientes, aprobados y rechazados
+    documentos_pendientes = DocumentosEstudiante.objects.filter(estado_inscripcion="En Revisión").count()
+    documentos_aprobados = DocumentosEstudiante.objects.filter(estado_inscripcion="Aprobado").count()
+    documentos_rechazados = DocumentosEstudiante.objects.filter(estado_inscripcion="Rechazado").count()
+
+    # Paginación
+    page = request.GET.get('page', 1)
     paginator = Paginator(Shinobu, 5)
 
     try:
         Shinobu = paginator.page(page)
     except (EmptyPage, PageNotAnInteger):
         Shinobu = paginator.page(paginator.num_pages)
-    
-    
+
+    # Contexto para la plantilla
     context = {
         'page_title': 'SEDA | Estudiantes',
-        'Culona': Shinobu,
-        'estudiantes': Mitsuri,
-        'pendientes': Mai,
+        'Culona': Shinobu,  # Lista de estudiantes paginada
+        'estudiantes': Mitsuri,  # Total de estudiantes
+        'pendientes': documentos_pendientes,  # Total de documentos pendientes
+        'aprobados': documentos_aprobados,  # Total de documentos aprobados
+        'rechazados': documentos_rechazados,  # Total de documentos rechazados
         'paginator': paginator
     }
-    
+
     return render(request, "estudiantes.html", context)
 
 def listaEstudiantes(request):
@@ -167,7 +173,8 @@ def actualizar_documentos(request, id):
 
 def documentos_pendientes(request):
     
-    Maki = DocumentosEstudiante.objects.all().order_by('-id')
+    Maki = DocumentosEstudiante.objects.filter(estado_inscripcion="En Revisión").order_by('-id')
+
     
     context = {
         'page_title': 'SEDA | Documentos Pendientes',
@@ -175,3 +182,49 @@ def documentos_pendientes(request):
     }
     
     return render(request, "pendientes/documentos_pendientes.html", context)
+
+def visualizarDocumentos(request, id):
+    
+    Geto = get_object_or_404(DocumentosEstudiante, id=id)
+    
+    context = {
+        'page_title': f'SEDA | Documentos: {Geto.estudiante.nombre} {Geto.estudiante.apellido}',
+        'Suguru': Geto
+    }
+    
+    return render(request, "pendientes/visualizarEstudiante.html", context)
+
+def documentos_aprobados(request):
+    Maki = DocumentosEstudiante.objects.filter(estado_inscripcion="Aprobado").order_by('-id')
+    
+    context = {
+        'page_title': 'SEDA | Procesos Aprobados',
+        'Zenin': Maki
+    }
+    
+    return render(request, "pendientes/procesos_aprobados.html", context)
+
+def documentos_rechazados(request):
+    Maki = DocumentosEstudiante.objects.filter(estado_inscripcion="Rechazado").order_by('-id')
+    
+    context = {
+        'page_title': 'SEDA | Procesos Aprobados',
+        'Zenin': Maki
+    }
+    
+    return render(request, "pendientes/procesos_rechazados.html", context)
+
+@login_required
+def cambiar_estado_inscripcion(request, id):
+    documentos = get_object_or_404(DocumentosEstudiante, id=id)
+
+    if request.method == 'POST':
+        nuevo_estado = request.POST.get('estado_inscripcion')
+        if nuevo_estado in dict(EstadoInscripcion.choices):
+            documentos.estado_inscripcion = nuevo_estado
+            documentos.save()
+            messages.success(request, f"El estado de inscripción se cambió a {nuevo_estado}.")
+        else:
+            messages.error(request, "Estado de inscripción no válido.")
+    
+    return redirect('estudiantes')

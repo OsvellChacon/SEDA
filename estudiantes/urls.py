@@ -10,5 +10,10 @@ urlpatterns = [
     path('verEstudiante/<id>/', views.mostrarEstudiante, name='verEstudiante'),
     path('subir_documentos/', views.subir_documentos, name='subir_documentos'),
     path('actualizar_documentos/<id>/', views.actualizar_documentos, name='actualizar_documentos'),
-    path('documentos_pendientes/', views.documentos_pendientes, name='documentos_pendientes')
+    path('documentos_pendientes/', views.documentos_pendientes, name='documentos_pendientes'),
+    path('documentos_aprobados/', views.documentos_aprobados, name='documentos_aprobados'),
+    path('documentos_rechazados/', views.documentos_rechazados, name='documentos_rechazados'),
+    path('visualizar_documento/<id>/', views.visualizarDocumentos, name='visualizarDocumento'),
+    path('cambiar-estado-inscripcion/<id>/', views.cambiar_estado_inscripcion, name='cambiar_estado_inscripcion'),
+
 ]

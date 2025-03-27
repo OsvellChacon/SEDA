@@ -1,0 +1,188 @@
+{% extends 'base/head.html' %}
+
+{% block Osvell %}
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+            <h1>Perfil</h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="{% url 'lista_estudiantes' %}">Estudiantes</a></div>
+                <div class="breadcrumb-item">{{Suguru.estudiante.nombre}} {{Suguru.estudiante.apellido}}</div>
+            </div>
+        </div>
+        {% if messages %}
+        <div class="alert alert-success">
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="section-body">
+            <h2 class="section-title">{{Suguru.estudiante.nombre}} {{Suguru.estudiante.apellido}}</h2>
+            <p class="section-lead">
+                Consulta información detallada sobre el usuario
+            </p>
+
+            <div class="row mt-sm-4">
+                <div class="col-12">
+                    <div class="card profile-widget">
+                        <div class="profile-widget-header">
+                            <img alt="{{Suguru.estudiante.nombre}} {{Suguru.estudiante.apellido}}" src="{{Suguru.estudiante.foto_perfil.url}}" class="rounded-circle profile-widget-picture">
+                            <div class="profile-widget-items">
+                                <div class="profile-widget-item">
+                                    <div class="profile-widget-item-label">Rol</div>
+                                    <div class="profile-widget-item-value">{{Suguru.estudiante.rol}}</div>
+                                </div>
+                                <div class="profile-widget-item">
+                                    <div class="profile-widget-item-label">Codigo Inscripcion</div>
+                                    <div class="profile-widget-item-value">{{Suguru.codigo_inscripcion}}</div>
+                                </div>
+                                <div class="profile-widget-item">
+                                    <div class="profile-widget-item-label">Estado de inscripción</div>
+                                    <div class="profile-widget-item-value">
+                                        <button class="btn btn-sm {% if Suguru.estado_inscripcion == 'Aprobado' %}btn-success{% elif Suguru.estado_inscripcion == 'Rechazado' %}btn-danger{% else %}btn-warning{% endif %}" 
+                                                data-toggle="modal" data-target="#estadoInscripcionModal">
+                                            {{ Suguru.estado_inscripcion }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="profile-widget-description">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <tbody>
+                                                <tr>
+                                                    <th><i class="fas fa-passport"></i> Pasaporte:</th>
+                                                    <td>
+                                                        {% if Suguru.pasaporte %}
+                                                            <a href="{{ Suguru.pasaporte.url }}" target="_blank" class="btn btn-sm btn-primary">
+                                                                <i class="fas fa-eye"></i> Previsualizar
+                                                            </a>
+                                                        {% else %}
+                                                            <span class="text-muted">No disponible</span>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th><i class="fas fa-id-card"></i> DNI:</th>
+                                                    <td>
+                                                        {% if Suguru.documento_identidad %}
+                                                            <a href="{{ Suguru.documento_identidad.url }}" target="_blank" class="btn btn-sm btn-primary">
+                                                                <i class="fas fa-eye"></i> Previsualizar
+                                                            </a>
+                                                        {% else %}
+                                                            <span class="text-muted">No disponible</span>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th><i class="fas fa-file-alt"></i> Antecedentes Penales:</th>
+                                                    <td>
+                                                        {% if Suguru.antecedentes_penales %}
+                                                            <a href="{{ Suguru.antecedentes_penales.url }}" target="_blank" class="btn btn-sm btn-primary">
+                                                                <i class="fas fa-eye"></i> Previsualizar
+                                                            </a>
+                                                        {% else %}
+                                                            <span class="text-muted">No disponible</span>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th><i class="fas fa-file-medical"></i> Seguro Médico:</th>
+                                                    <td>
+                                                        {% if Suguru.seguro_medico %}
+                                                            <a href="{{ Suguru.seguro_medico.url }}" target="_blank" class="btn btn-sm btn-primary">
+                                                                <i class="fas fa-eye"></i> Previsualizar
+                                                            </a>
+                                                        {% else %}
+                                                            <span class="text-muted">No disponible</span>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th><i class="fas fa-envelope"></i> Carta Inscripción:</th>
+                                                    <td>
+                                                        {% if Suguru.carta_inscripcion %}
+                                                            <a href="{{ Suguru.carta_inscripcion.url }}" target="_blank" class="btn btn-sm btn-primary">
+                                                                <i class="fas fa-eye"></i> Previsualizar
+                                                            </a>
+                                                        {% else %}
+                                                            <span class="text-muted">No disponible</span>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th><i class="fas fa-receipt"></i> Recibo de Pago:</th>
+                                                    <td>
+                                                        {% if Suguru.recibo_pago %}
+                                                            <a href="{{ Suguru.recibo_pago.url }}" target="_blank" class="btn btn-sm btn-primary">
+                                                                <i class="fas fa-eye"></i> Previsualizar
+                                                            </a>
+                                                        {% else %}
+                                                            <span class="text-muted">No disponible</span>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th><i class="fas fa-clock"></i> Ultima Modificacion:</th>
+                                                    <td>
+                                                        <span class="text-muted">{{ Suguru.fecha_subida }}</span>
+                                                    </td>
+                                                </tr>
+                                                <!-- Repite el mismo patrón para los demás documentos -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Modal para seleccionar permisos -->
+<div class="modal fade" id="estadoInscripcionModal" tabindex="-1" role="dialog" aria-labelledby="estadoInscripcionModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="estadoInscripcionModalLabel">Cambiar Estado de Inscripción</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{% url 'cambiar_estado_inscripcion' Suguru.id %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="estado_inscripcion">Selecciona el nuevo estado:</label>
+                        <select class="form-control" id="estado_inscripcion" name="estado_inscripcion">
+                            <option value="En Revisión" {% if Suguru.estado_inscripcion == "En Revisión" %}selected{% endif %}>En Revisión</option>
+                            <option value="Aprobado" {% if Suguru.estado_inscripcion == "Aprobado" %}selected{% endif %}>Aprobado</option>
+                            <option value="Rechazado" {% if Suguru.estado_inscripcion == "Rechazado" %}selected{% endif %}>Rechazado</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Función para seleccionar o deseleccionar todos los checkboxes
+    function toggleCheckboxes() {
+        const checkboxes = document.querySelectorAll('.form-check-input');
+        const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+        checkboxes.forEach(checkbox => checkbox.checked = !allChecked);
+    }
+</script>
+{% endblock %}

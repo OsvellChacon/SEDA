@@ -11,15 +11,15 @@
                   </div>
                   <div class="card-stats-items">
                     <div class="card-stats-item">
-                      <div class="card-stats-item-count">24</div>
+                      <div class="card-stats-item-count">{{rechazados}}</div>
                       <div class="card-stats-item-label">Rechazados</div>
                     </div>
                     <div class="card-stats-item">
-                      <div class="card-stats-item-count">12</div>
+                      <div class="card-stats-item-count">{{pendientes}}</div>
                       <div class="card-stats-item-label">Pendientes</div>
                     </div>
                     <div class="card-stats-item">
-                      <div class="card-stats-item-count">23</div>
+                      <div class="card-stats-item-count">{{aprobados}}</div>
                       <div class="card-stats-item-label">Completados</div>
                     </div>
                   </div>
@@ -106,22 +106,34 @@
                   <div class="card-icon">
                     <i class="far fa-question-circle"></i>
                   </div>
-                  <h4>14</h4>
+                  <h4>{{ pendientes }}</h4>
                   <div class="card-description">Procesos por aprobar</div>
                 </div>
                 <div class="card-body p-0">
                   <div class="tickets-list">
-                    <a href="#" class="ticket-item">
+                    {% for d in documentos_pendientes_lista %}
+                    <a href="{% url 'visualizarDocumento' d.id %}" class="ticket-item">
                       <div class="ticket-title">
-                        <h4>My order hasn't arrived yet</h4>
+                        <h4>{{ d.estudiante.nombre }} {{ d.estudiante.apellido }}</h4>
                       </div>
                       <div class="ticket-info">
-                        <div>Laila Tazkiah</div>
+                        <div>{{ d.codigo_inscripcion }}</div>
                         <div class="bullet"></div>
-                        <div class="text-primary">1 min ago</div>
+                        <div class="text-primary">
+                          {% with d.fecha_subida|timesince as tiempo %}
+                            {{ tiempo }} en espera
+                          {% endwith %}
+                        </div>
                       </div>
                     </a>
-                    <a href="features-tickets.html" class="ticket-item ticket-more">
+                    {% empty %}
+                    <div class="ticket-item">
+                      <div class="ticket-title">
+                        <h4>No hay procesos pendientes</h4>
+                      </div>
+                    </div>
+                    {% endfor %}
+                    <a href="{% url 'documentos_pendientes' %}" class="ticket-item ticket-more">
                       Ver todos <i class="fas fa-chevron-right"></i>
                     </a>
                   </div>
